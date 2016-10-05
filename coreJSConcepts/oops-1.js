@@ -65,3 +65,61 @@ var Extend = function (inheritorClass, baseClass) {
     return baseClass;
 };
 
+
+// OR IN SIMPLE MANNER FOLLOWING CAN BE DONE:
+//EXAMPLE - 1:
+function Person(name){
+    this.name = name;
+}
+Person.prototype.getName = function(){
+    console.log(this.name);
+}
+function Student(id, name){
+    this.id = id;
+    Person.call(this, name);
+}
+Student.prototype = Object.create(Person.prototype);
+Student.prototype.constructor = Student;
+
+/*
+Object.create() is an excellent choice for creating an object without going through its constructor.
+You can omit Person.cal() method and use the following:
+Student.prototype = Object.create(Person.prototype, {name:{writable: false, value:"Bala"}});
+See the second example below:
+*/
+
+Student.prototype.getId = function(){
+    console.log(this.id);
+}
+
+var s = new Student(822985, "Bala");
+
+//EXAMPLE - 2:
+
+function Person(name){
+    this.name = name;
+}
+Person.prototype.getName = function(){
+    console.log(this.name);
+}
+Person.prototype.getInfo = function(){
+    console.log("My description is " + this.desc);
+};
+function Student(id, name){
+    this.id = id;
+}
+Student.prototype = Object.create(Person.prototype, 
+                        {name: {writable: true, configurable:true, value:"MOhanty"}, 
+                         desc: {configurable:true, 
+                                get: function (){return this.name;}, 
+                                set: function(value){this.name=value;}
+                               }
+                         }
+                        );
+Student.prototype.constructor = Student;
+
+Student.prototype.getId = function(){
+    console.log(this.id);
+}
+
+var s = new Student(822985, "Bala");
